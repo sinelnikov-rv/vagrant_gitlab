@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 **/.vagrant/
 *.log
+=======
+.vagrant/
+>>>>>>> parent of 75f58f4... add Vagrant files for gitlab server and two dev hosts
