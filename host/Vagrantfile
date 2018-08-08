@@ -12,7 +12,32 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "base"
+  config.vm.define "dev1" do |dev1|
+   dev1.vm.box = "ubuntu/xenial64"
+   dev1.vm.network "private_network", ip: "172.16.1.3"
+   dev1.vm.provision "shell", inline: <<-SHELL
+   sudo apt-get update
+   sudo apt-get install -y git
+   sudo -H -u vagrant bash -c 'git config --global user.name "DEV1"'
+   sudo -H -u vagrant bash -c 'git config --global user.email "dev1@test.com"'
+   sudo -H -u vagrant bash -c 'ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa'
+   sudo sh -c "echo '172.16.1.2 gitlab.test' >> /etc/hosts"
+   SHELL
+  end
+
+  config.vm.define "dev2" do |dev2|
+   dev2.vm.box = "ubuntu/xenial64"
+   dev2.vm.network "private_network", ip: "172.16.1.4"
+   dev2.vm.provision "shell", inline: <<-SHELL
+   sudo apt-get update
+   sudo apt-get install -y git
+   sudo -H -u vagrant bash -c 'git config --global user.name "DEV2"'
+   sudo -H -u vagrant bash -c 'git config --global user.email "dev2@test.com"'
+   sudo -H -u vagrant bash -c 'ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa'
+   sudo sh -c "echo '172.16.1.2 gitlab.test' >> /etc/hosts"
+   SHELL
+  end
+end
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -63,8 +88,6 @@ Vagrant.configure("2") do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  # config.vm.provision "shell", inline: <<-SHELL
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
-end
